@@ -1,4 +1,4 @@
-#cloud-config
+#Script for create OpenVPN for mr shas includes everything inside - Key and client.
 apt_update: true
 packages:
   - openvpn
@@ -26,13 +26,6 @@ runcmd:
   - sed -i -e 's/KEY_NAME="EasyRSA"/KEY_NAME="server"/' /etc/openvpn/easy-rsa/vars
   - openssl dhparam -out /etc/openvpn/dh2048.pem 2048
   - cd /etc/openvpn/easy-rsa && . ./vars
-  # Optionally set indentity information for certificates:
-  # - export KEY_COUNTRY="<%COUNTRY%>" # 2-char country code
-  # - export KEY_PROVINCE="<%PROVINCE%>" # 2-char state/province code
-  # - export KEY_CITY="<%CITY%>" # City name
-  # - export KEY_ORG="<%ORG%>" # Org/company name
-  # - export KEY_EMAIL="<%EMAIL%>" # Email address
-  # - export KEY_OU="<%ORG_UNIT%>" # Orgizational unit / department
   - cd /etc/openvpn/easy-rsa && ./clean-all
   - cd /etc/openvpn/easy-rsa && ./build-ca --batch
   - cd /etc/openvpn/easy-rsa && ./build-key-server --batch server
@@ -41,25 +34,25 @@ runcmd:
   - cp /etc/openvpn/easy-rsa/keys/ca.crt /etc/openvpn
   - service openvpn start
 
-  - cd /etc/openvpn/easy-rsa && ./build-key --batch client1
-  - cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf /etc/openvpn/easy-rsa/keys/client.ovpn
-  - sed -i -e "s/my-server-1/$IPADDR/" /etc/openvpn/easy-rsa/keys/client.ovpn
-  - sed -i -e 's/;user nobody/user nobody/' /etc/openvpn/easy-rsa/keys/client.ovpn
-  - sed -i -e 's/;group nogroup/group nogroup/' /etc/openvpn/easy-rsa/keys/client.ovpn
-  - sed -i -e 's/ca ca.crt//' /etc/openvpn/easy-rsa/keys/client.ovpn
-  - sed -i -e 's/cert client.crt//' /etc/openvpn/easy-rsa/keys/client.ovpn
-  - sed -i -e 's/key client.key//' /etc/openvpn/easy-rsa/keys/client.ovpn
-  - echo "<ca>" >> /etc/openvpn/easy-rsa/keys/client.ovpn
-  - cat /etc/openvpn/ca.crt >> /etc/openvpn/easy-rsa/keys/client.ovpn
-  - echo "</ca>" >> /etc/openvpn/easy-rsa/keys/client.ovpn
-  - echo "<cert>" >> /etc/openvpn/easy-rsa/keys/client.ovpn
-  - openssl x509 -outform PEM -in /etc/openvpn/easy-rsa/keys/client1.crt >> /etc/openvpn/easy-rsa/keys/client.ovpn
-  - echo "</cert>" >> /etc/openvpn/easy-rsa/keys/client.ovpn
-  - echo "<key>" >> /etc/openvpn/easy-rsa/keys/client.ovpn
-  - cat /etc/openvpn/easy-rsa/keys/client1.key >> /etc/openvpn/easy-rsa/keys/client.ovpn
-  - echo "</key>" >> /etc/openvpn/easy-rsa/keys/client.ovpn
+  - cd /etc/openvpn/easy-rsa && ./build-key --batch shas_client1
+  - cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - sed -i -e "s/my-server-1/$IPADDR/" /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - sed -i -e 's/;user nobody/user nobody/' /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - sed -i -e 's/;group nogroup/group nogroup/' /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - sed -i -e 's/ca ca.crt//' /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - sed -i -e 's/cert client.crt//' /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - sed -i -e 's/key client.key//' /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - echo "<ca>" >> /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - cat /etc/openvpn/ca.crt >> /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - echo "</ca>" >> /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - echo "<cert>" >> /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - openssl x509 -outform PEM -in /etc/openvpn/easy-rsa/keys/client1.crt >> /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - echo "</cert>" >> /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - echo "<key>" >> /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - cat /etc/openvpn/easy-rsa/keys/client1.key >> /etc/openvpn/easy-rsa/keys/shas_client.ovpn
+  - echo "</key>" >> /etc/openvpn/easy-rsa/keys/shas_client.ovpn
 
-  - cp /etc/openvpn/easy-rsa/keys/client.ovpn /root/
-  - cp /etc/openvpn/easy-rsa/keys/client1.crt /root/
-  - cp /etc/openvpn/easy-rsa/keys/client1.key /root/
-  - cp /etc/openvpn/easy-rsa/keys/ca.crt /root/
+  - cp /etc/openvpn/easy-rsa/keys/shas_client.ovpn ~/openvpn
+  - cp /etc/openvpn/easy-rsa/keys/shas_client1.crt ~/openvpn
+  - cp /etc/openvpn/easy-rsa/keys/shas_client1.key ~/openvpn
+  - cp /etc/openvpn/easy-rsa/keys/ca.crt ~/openvpn
